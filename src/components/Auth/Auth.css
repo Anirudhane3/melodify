@@ -1,0 +1,183 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-base);
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+}
+
+/* Ambient background blobs */
+.auth-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.auth-blob-1 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(29,185,84,0.18) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  animation: blobFloat 8s ease-in-out infinite;
+}
+.auth-blob-2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(29,185,84,0.1) 0%, transparent 70%);
+  bottom: -80px; right: -80px;
+  animation: blobFloat 10s ease-in-out infinite reverse;
+}
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(20px, -20px) scale(1.05); }
+}
+
+/* Card */
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-xl);
+  padding: 40px;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(29,185,84,0.05);
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Logo */
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.auth-logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.auth-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.auth-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+/* Error */
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 69, 69, 0.12);
+  border: 1px solid rgba(255, 69, 69, 0.3);
+  color: #ff6b6b;
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Form */
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+.auth-field { display: flex; flex-direction: column; gap: 6px; }
+.auth-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.auth-password-wrap { position: relative; }
+.auth-password-wrap .input-field { padding-right: 44px; }
+.auth-pwd-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+.auth-pwd-toggle:hover { color: var(--text-primary); }
+
+.auth-submit {
+  margin-top: 8px;
+  width: 100%;
+  padding: 13px !important;
+  font-size: 15px !important;
+  justify-content: center;
+}
+
+/* Divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Switch */
+.auth-switch {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.auth-switch-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.auth-switch-link:hover { color: var(--accent-hover); }
+
+/* ── Google Sign-In Button ── */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: var(--border-radius-md);
+  background: #fff;
+  color: #3c4043;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid #dadce0;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: 4px;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+}
+.btn-google:hover:not(:disabled) {
+  background: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+.btn-google:active:not(:disabled) { transform: translateY(0); }
+.btn-google:disabled { opacity: 0.6; cursor: not-allowed; }

@@ -1,0 +1,172 @@
+.song-card {
+  display: grid;
+  grid-template-columns: 40px 44px 1fr 180px 100px;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  border-radius: var(--border-radius-md);
+  transition: background var(--transition-fast);
+  cursor: default;
+  position: relative;
+  animation: fadeIn 0.3s ease forwards;
+}
+.song-card:hover {
+  background: var(--bg-highlight);
+}
+.song-card--active {
+  background: var(--accent-dim) !important;
+}
+
+/* Index */
+.song-card-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+.song-card-num {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  transition: opacity var(--transition-fast);
+}
+.song-card:hover .song-card-num { opacity: 0; }
+.song-card-play-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  color: var(--text-primary);
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-md);
+  transition: opacity var(--transition-fast);
+}
+.song-card:hover .song-card-play-overlay { opacity: 1; }
+.song-card--active .song-card-play-overlay { opacity: 0; }
+.song-card--active:hover .song-card-play-overlay { opacity: 1; }
+
+/* Cover */
+.song-card-cover-wrap { flex-shrink: 0; }
+.song-card-cover {
+  width: 40px; height: 40px;
+  border-radius: var(--border-radius-sm);
+  object-fit: cover;
+  background: var(--bg-highlight);
+}
+
+/* Info */
+.song-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+.song-card-title  { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.song-card-title--active { color: var(--accent); }
+.song-card-artist { font-size: 12px; color: var(--text-secondary); }
+
+/* Album */
+.song-card-album {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Right */
+.song-card-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  position: relative;
+}
+.song-card-duration {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 36px;
+  text-align: right;
+}
+.song-card-menu-btn {
+  opacity: 0;
+  color: var(--text-secondary);
+  transition: opacity var(--transition-fast);
+}
+.song-card:hover .song-card-menu-btn { opacity: 1; }
+.song-card-menu-wrap { position: relative; }
+
+/* Dropdown */
+.song-card-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--bg-highlight);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--border-radius-lg);
+  padding: 8px;
+  min-width: 180px;
+  box-shadow: var(--shadow-lg);
+  z-index: 300;
+  animation: fadeIn 0.15s ease;
+}
+.song-card-dropdown-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 4px 8px 8px;
+}
+.song-card-dropdown-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+}
+.song-card-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: var(--border-radius-md);
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.song-card-dropdown-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.song-card-toast {
+  position: absolute;
+  right: 0;
+  top: -28px;
+  font-size: 11px;
+  color: var(--accent);
+  white-space: nowrap;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Column header row */
+.song-list-header {
+  display: grid;
+  grid-template-columns: 40px 44px 1fr 180px 100px;
+  gap: 12px;
+  padding: 0 16px 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.song-list-header span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.song-list-header .col-right { text-align: right; }
