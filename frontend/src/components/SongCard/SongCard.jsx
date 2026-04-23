@@ -1,0 +1,49 @@
+import { useMusic } from '../../context/MusicContext';
+
+export default function SongCard({ song, queueList, index }) {
+  const { currentSong, isPlaying, playSong, togglePlay } = useMusic();
+  const isActive = currentSong?.id === song.id;
+  const cover = song.cover_url || song.coverUrl
+    || `https://picsum.photos/seed/${song.id}/56/56`;
+
+  const handleClick = () => {
+    if (isActive) togglePlay();
+    else playSong(song, queueList, index);
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-150 group
+        ${isActive ? 'bg-violet-600/15 ring-1 ring-violet-500/30' : 'hover:bg-white/5'}`}
+    >
+      {/* Cover / play icon overlay */}
+      <div className="relative w-10 h-10 flex-shrink-0">
+        <img src={cover} alt={song.title}
+          className="w-10 h-10 rounded-lg object-cover" />
+        <div className={`absolute inset-0 rounded-lg flex items-center justify-center bg-black/50
+          transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          {isActive && isPlaying
+            ? <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            : <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          }
+        </div>
+      </div>
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className={`text-sm font-medium truncate ${isActive ? 'text-violet-400' : 'text-white'}`}>
+          {song.title}
+        </p>
+        <p className="text-xs text-zinc-500 truncate">{song.artist}</p>
+      </div>
+
+      {/* Duration */}
+      {song.duration && (
+        <span className="text-xs text-zinc-600 group-hover:text-zinc-400 transition-colors flex-shrink-0">
+          {song.duration}
+        </span>
+      )}
+    </div>
+  );
+}
