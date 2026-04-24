@@ -92,7 +92,7 @@ export default function AdminUpload() {
 
 /* ── Upload Tab ─────────────────────────────────────────────────────── */
 function UploadTab({ currentUser, refreshSongs }) {
-  const [form, setForm] = useState({ title: '', artist: '', album: '', genre: 'Tamil', duration: '', actor: '', actress: '', singer: '' });
+  const [form, setForm] = useState({ title: '', album: '', genre: 'Tamil', duration: '', actor: '', actress: '', singer: '' });
   const [audioFile,  setAudioFile]  = useState(null);
   const [coverFile,  setCoverFile]  = useState(null);
   const [coverPreview, setCoverPreview] = useState('');
@@ -127,7 +127,7 @@ function UploadTab({ currentUser, refreshSongs }) {
       toast.loading('Saving to database…', { id: 'upload' });
       await api.post('/songs', {
         title:    form.title.trim(),
-        artist:   form.artist.trim(),
+        artist:   [form.singer, form.actor, form.actress].filter(Boolean).join(', ') || 'Unknown Artist',
         album:    form.album.trim() || 'Unknown Album',
         genre:    form.genre,
         duration: form.duration.trim(),
@@ -137,8 +137,8 @@ function UploadTab({ currentUser, refreshSongs }) {
         audioUrl, coverUrl,
       });
       toast.success(`"${form.title}" uploaded!`, { id: 'upload' });
-      setRecent(p => [{ title: form.title, artist: form.artist, genre: form.genre, coverUrl, id: Date.now() }, ...p]);
-      setForm({ title: '', artist: '', album: '', genre: 'Tamil', duration: '', actor: '', actress: '', singer: '' });
+      setRecent(p => [{ title: form.title, artist: [form.singer, form.actor, form.actress].filter(Boolean).join(', '), genre: form.genre, coverUrl, id: Date.now() }, ...p]);
+      setForm({ title: '', album: '', genre: 'Tamil', duration: '', actor: '', actress: '', singer: '' });
       setAudioFile(null); setCoverFile(null); setCoverPreview('');
       setAudioProgress(0); setCoverProgress(0);
       refreshSongs();
@@ -155,13 +155,9 @@ function UploadTab({ currentUser, refreshSongs }) {
         <h2 className="text-base font-semibold text-white">Song Details</h2>
         <div className="grid grid-cols-2 gap-4">
           {[
-            { label: 'Title *', name: 'title', placeholder: 'e.g. Blinding Lights' },
-            { label: 'Artist *', name: 'artist', placeholder: 'e.g. The Weeknd' },
-            { label: 'Album', name: 'album', placeholder: 'e.g. After Hours' },
+            { label: 'Title *', name: 'title', placeholder: 'e.g. Chellamma' },
+            { label: 'Album', name: 'album', placeholder: 'e.g. Doctor' },
             { label: 'Duration', name: 'duration', placeholder: 'e.g. 3:22' },
-            { label: 'Actor', name: 'actor', placeholder: 'e.g. Vijay' },
-            { label: 'Actress', name: 'actress', placeholder: 'e.g. Pooja Hegde' },
-            { label: 'Singer', name: 'singer', placeholder: 'e.g. Anirudh' },
           ].map(({ label, name, placeholder }) => (
             <div key={name}>
               <label className="block text-xs font-medium text-zinc-400 mb-1">{label}</label>
@@ -177,6 +173,26 @@ function UploadTab({ currentUser, refreshSongs }) {
               className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white outline-none">
               {GENRES.map(g => <option key={g}>{g}</option>)}
             </select>
+          </div>
+        </div>
+
+        {/* Artists section */}
+        <div>
+          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Artists</p>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: 'Singer', name: 'singer', placeholder: 'e.g. Anirudh' },
+              { label: 'Actor', name: 'actor', placeholder: 'e.g. Vijay' },
+              { label: 'Actress', name: 'actress', placeholder: 'e.g. Pooja Hegde' },
+            ].map(({ label, name, placeholder }) => (
+              <div key={name}>
+                <label className="block text-xs font-medium text-zinc-500 mb-1">{label}</label>
+                <input name={name} value={form[name]}
+                  onChange={e => setForm(p => ({ ...p, [name]: e.target.value }))}
+                  placeholder={placeholder}
+                  className="w-full bg-zinc-800 border border-zinc-700 focus:border-violet-500 rounded-xl px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none transition-colors" />
+              </div>
+            ))}
           </div>
         </div>
 
