@@ -1,14 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { GoogleLogin } from '@react-oauth/google';
+import api from '../lib/api';
 
 export default function LoginPage() {
   const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [slowLoad, setSlowLoad] = useState(false);
+  const [serverReady, setServerReady] = useState(false);
+
+  // Pre-warm the server as soon as the login page loads
+  useEffect(() => {
+    let slowTimer;
+    const warmUp = async () => {
+      try {
+        await api.get('/songs?size=1');
+        setServerReady(true);
+      } catch { /* server waking up */ }
+    };
+    warmUp();
+    slowTimer = setTimeout(() => setSlowLoad(true), 4000);
+    return () => clearTimeout(slowTimer);
+  }, []);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     setLoading(true);
@@ -42,7 +59,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-2 justify-center mb-8">
           <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-900/40">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="white">
-              <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
+              <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
             </svg>
           </div>
           <span className="text-2xl font-bold text-white tracking-tight">CrystalBeats</span>
@@ -52,6 +69,17 @@ export default function LoginPage() {
           <h2 className="text-xl font-bold text-white mb-1">Welcome back</h2>
           <p className="text-sm text-zinc-500 mb-6">Sign in to continue listening</p>
 
+          {/* Server warm-up notice */}
+          {slowLoad && !serverReady && (
+            <div className="mb-4 flex items-center gap-2 bg-violet-900/20 border border-violet-700/30 rounded-xl px-4 py-2.5">
+              <span className="w-3 h-3 border-2 border-violet-400/40 border-t-violet-400 rounded-full animate-spin flex-shrink-0" />
+              <p className="text-xs text-violet-300">
+                Server is waking up — first load may take ~30s.
+              </p>
+            </div>
+          )}
+
+          {/* Google Login — popup_ux is required by Google's OAuth security policy */}
           <div className="mb-6 flex justify-center">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
@@ -60,6 +88,7 @@ export default function LoginPage() {
               shape="rectangular"
               text="signin_with"
               size="large"
+              width="280"
             />
           </div>
 
