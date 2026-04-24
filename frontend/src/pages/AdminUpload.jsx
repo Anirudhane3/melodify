@@ -92,7 +92,7 @@ export default function AdminUpload() {
 
 /* ── Upload Tab ─────────────────────────────────────────────────────── */
 function UploadTab({ currentUser, refreshSongs }) {
-  const [form, setForm] = useState({ title: '', artist: '', album: '', genre: 'Tamil', duration: '' });
+  const [form, setForm] = useState({ title: '', artist: '', album: '', genre: 'Tamil', duration: '', actor: '', actress: '', singer: '' });
   const [audioFile,  setAudioFile]  = useState(null);
   const [coverFile,  setCoverFile]  = useState(null);
   const [coverPreview, setCoverPreview] = useState('');
@@ -131,11 +131,14 @@ function UploadTab({ currentUser, refreshSongs }) {
         album:    form.album.trim() || 'Unknown Album',
         genre:    form.genre,
         duration: form.duration.trim(),
+        actor:    form.actor.trim(),
+        actress:  form.actress.trim(),
+        singer:   form.singer.trim(),
         audioUrl, coverUrl,
       });
       toast.success(`"${form.title}" uploaded!`, { id: 'upload' });
       setRecent(p => [{ title: form.title, artist: form.artist, genre: form.genre, coverUrl, id: Date.now() }, ...p]);
-      setForm({ title: '', artist: '', album: '', genre: 'Tamil', duration: '' });
+      setForm({ title: '', artist: '', album: '', genre: 'Tamil', duration: '', actor: '', actress: '', singer: '' });
       setAudioFile(null); setCoverFile(null); setCoverPreview('');
       setAudioProgress(0); setCoverProgress(0);
       refreshSongs();
@@ -156,6 +159,9 @@ function UploadTab({ currentUser, refreshSongs }) {
             { label: 'Artist *', name: 'artist', placeholder: 'e.g. The Weeknd' },
             { label: 'Album', name: 'album', placeholder: 'e.g. After Hours' },
             { label: 'Duration', name: 'duration', placeholder: 'e.g. 3:22' },
+            { label: 'Actor', name: 'actor', placeholder: 'e.g. Vijay' },
+            { label: 'Actress', name: 'actress', placeholder: 'e.g. Pooja Hegde' },
+            { label: 'Singer', name: 'singer', placeholder: 'e.g. Anirudh' },
           ].map(({ label, name, placeholder }) => (
             <div key={name}>
               <label className="block text-xs font-medium text-zinc-400 mb-1">{label}</label>

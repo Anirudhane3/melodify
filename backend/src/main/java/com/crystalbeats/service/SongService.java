@@ -31,6 +31,9 @@ public class SongService {
                 .audioUrl(req.getAudioUrl())
                 .coverUrl(req.getCoverUrl())
                 .uploadedBy(uploadedBy)
+                .actor(req.getActor() != null ? req.getActor().trim() : null)
+                .actress(req.getActress() != null ? req.getActress().trim() : null)
+                .singer(req.getSinger() != null ? req.getSinger().trim() : null)
                 .build();
         return toDto(songRepo.save(song));
     }
@@ -53,6 +56,9 @@ public class SongService {
         dto.setCoverUrl(song.getCoverUrl());
         dto.setUploadedBy(song.getUploadedBy());
         dto.setCreatedAt(song.getCreatedAt() != null ? song.getCreatedAt().toString() : null);
+        dto.setActor(song.getActor());
+        dto.setActress(song.getActress());
+        dto.setSinger(song.getSinger());
         return dto;
     }
 }
