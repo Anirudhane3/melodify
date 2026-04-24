@@ -1,14 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { GoogleLogin } from '@react-oauth/google';
+import api from '../lib/api';
 
 export default function RegisterPage() {
   const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '', confirm: '' });
   const [loading, setLoading] = useState(false);
+  const [slowLoad, setSlowLoad] = useState(false);
+  const [serverReady, setServerReady] = useState(false);
+
+  useEffect(() => {
+    let slowTimer;
+    const warmUp = async () => {
+      try {
+        await api.get('/songs?size=1');
+        setServerReady(true);
+      } catch { /* server waking up */ }
+    };
+    warmUp();
+    slowTimer = setTimeout(() => setSlowLoad(true), 4000);
+    return () => clearTimeout(slowTimer);
+  }, []);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     setLoading(true);
@@ -54,6 +70,15 @@ export default function RegisterPage() {
         <div className="bg-zinc-900 border border-white/5 rounded-2xl p-8 shadow-2xl">
           <h2 className="text-xl font-bold text-white mb-1">Create account</h2>
           <p className="text-sm text-zinc-500 mb-6">Join CrystalBeats and start listening</p>
+
+          {slowLoad && !serverReady && (
+            <div className="mb-4 flex items-center gap-2 bg-violet-900/20 border border-violet-700/30 rounded-xl px-4 py-2.5">
+              <span className="w-3 h-3 border-2 border-violet-400/40 border-t-violet-400 rounded-full animate-spin flex-shrink-0" />
+              <p className="text-xs text-violet-300">
+                Server is waking up — first load may take ~30s. You can register now!
+              </p>
+            </div>
+          )}
 
           <div className="mb-6 flex justify-center">
             <GoogleLogin
