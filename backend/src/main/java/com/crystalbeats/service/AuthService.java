@@ -31,6 +31,19 @@ public class AuthService {
     @Value("${google.client.id}")
     private String googleClientId;
 
+    // Cached verifier — built once on first use, not on every login
+    private GoogleIdTokenVerifier googleVerifier;
+
+    private GoogleIdTokenVerifier getGoogleVerifier() {
+        if (googleVerifier == null) {
+            googleVerifier = new GoogleIdTokenVerifier.Builder(
+                    new NetHttpTransport(), new GsonFactory())
+                    .setAudience(Collections.singletonList(googleClientId))
+                    .build();
+        }
+        return googleVerifier;
+    }
+
     public AuthResponse register(RegisterRequest req) {
         if (userRepo.existsByUsername(req.getUsername()))
             throw new RuntimeException("Username already taken.");
@@ -63,11 +76,7 @@ public class AuthService {
 
     public AuthResponse googleLogin(GoogleAuthRequest req) {
         try {
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList(googleClientId))
-                    .build();
-
-            GoogleIdToken idToken = verifier.verify(req.getCredential());
+            GoogleIdToken idToken = getGoogleVerifier().verify(req.getCredential());
             if (idToken != null) {
                 Payload payload = idToken.getPayload();
                 String email = payload.getEmail();
